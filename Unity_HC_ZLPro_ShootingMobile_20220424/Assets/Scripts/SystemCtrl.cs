@@ -24,18 +24,23 @@ namespace coolRain
 		private float rangeDirection = 2.5f;
 		[SerializeField, Header("角色旋轉速度"), Range(0, 100)]
 		private float speedTurn = 1.5f;
-
+		[SerializeField, Header("角色跑步參數")]
+		private string parameterWalk = "開關跑步";
 
 		private Rigidbody rig;
+		private Animator ani;
+
 		private void Awake()
 		{
 			rig = GetComponent<Rigidbody>();
+			ani = GetComponent<Animator>();
 		}
 		private void Update()
 		{
 			//GetJoyStickValue();
 			UpdateDirectionIconPos();
 			LookDirectionIcon();
+			UpdateAnimation();
 		}
 
 		private void FixedUpdate()
@@ -73,6 +78,12 @@ namespace coolRain
 			transform.rotation = Quaternion.Lerp(transform.rotation, Look, speedTurn * Time.deltaTime);
 			//角色的歐拉角 = 三維向量(0 ,原本的歐拉角.Y ,0)
 			transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+		}
+
+		private void UpdateAnimation() 
+		{
+			bool run = joystick.Horizontal != 0 || joystick.Vertical != 0;
+			ani.SetBool(parameterWalk, run);
 		}
 	}
 }
